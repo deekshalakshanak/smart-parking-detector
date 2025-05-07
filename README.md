@@ -56,4 +56,7 @@ The **Smart Parking Slot Detector** leverages state-of-the-art object detection 
 ---
 
 ## 📁 Directory Structure
-
+smart-parking-detector/
+│
+├── detect_parking.py # Main Streamlit app
+├── requirements.txt # Python
