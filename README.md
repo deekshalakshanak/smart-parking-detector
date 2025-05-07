@@ -1,5 +1,7 @@
 # 🚗 Smart Parking Slot Detector using Deep Learning and Streamlit
 
+🔗 **[Click here to try the live app](https://smart-parking-detector-mbqjqm8fk7skf5ffrpmpk3.streamlit.app)**
+
 An intelligent computer vision system that automatically detects **occupied** and **vacant** parking spaces from static images and video streams using **YOLOv8**, integrated with a real-time **Streamlit** interface for seamless user interaction.
 
 ---
@@ -43,20 +45,38 @@ The **Smart Parking Slot Detector** leverages state-of-the-art object detection 
 - **YOLOv8**: High-speed, high-accuracy one-stage object detector.
 - Model hosted via [Roboflow](https://roboflow.com/), enabling real-time REST API inference.
 
-### 📈 Ablation Study
+---
 
-| Model            | Accuracy | Precision | Recall | F1 Score |
-|------------------|----------|-----------|--------|----------|
-| Logistic Regression | 82.1%   | 80.5%     | 78.3%  | 79.4%    |
-| SVM               | 86.4%   | 84.9%     | 85.0%  | 84.9%    |
-| YOLOv8 (ours)     | 93.7%   | 92.5%     | 94.3%  | 93.4%    |
+## 📈 Ablation Study
+
+| Model               | Accuracy | Precision | Recall | F1 Score |
+|---------------------|----------|-----------|--------|----------|
+| Logistic Regression | 82.1%    | 80.5%     | 78.3%  | 79.4%    |
+| SVM                 | 86.4%    | 84.9%     | 85.0%  | 84.9%    |
+| YOLOv8 (ours)       | 93.7%    | 92.5%     | 94.3%  | 93.4%    |
 
 **Justification**: YOLOv8 outperforms classical ML models due to its capability to process contextual and spatial information directly from images, making it more robust to real-world visual noise.
 
 ---
 
 ## 📁 Directory Structure
+
 smart-parking-detector/
-│
 ├── detect_parking.py # Main Streamlit app
-├── requirements.txt # Python
+├── requirements.txt # Python dependencies for deployment
+
+---
+
+## 🚀 Deployment
+
+Deployed using **Streamlit Cloud**. App can be accessed via the following URL:  
+👉 [smart-parking-detector.streamlit.app](https://smart-parking-detector-mbqjqm8fk7skf5ffrpmpk3.streamlit.app)
+
+---
+
+## 🙋‍♀️ Author
+
+**Deeksha Lakshanak**  
+If you found this project helpful, feel free to ⭐ the repo or connect on [LinkedIn](https://www.linkedin.com).
+
+---
