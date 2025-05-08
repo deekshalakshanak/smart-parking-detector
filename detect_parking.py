@@ -4,7 +4,6 @@ import numpy as np
 from PIL import Image
 import requests
 import tempfile
-import time
 
 API_KEY = "2PK2ci7yrB4NXchB9FRW"
 MODEL_ID = "parking-spaces-ezhxz/5"
@@ -29,15 +28,23 @@ uploaded_file = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     with st.spinner("🔍 Analyzing image... Please wait"):
-        # Save image to temp file
-        tfile = tempfile.NamedTemporaryFile(delete=False)
-        tfile.write(uploaded_file.read())
-        image_path = tfile.name
 
-        # Open image with OpenCV
-        image = cv2.imread(image_path)
+        # Load image using PIL and convert to RGB format
+        try:
+            image = np.array(Image.open(uploaded_file).convert("RGB"))
+        except Exception as e:
+            st.error("❌ Failed to read the uploaded image.")
+            st.stop()
 
-        with open(image_path, "rb") as image_file:
+        # Convert to BGR for OpenCV processing
+        image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        # Save temporary file for API upload
+        tfile = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+        cv2.imwrite(tfile.name, image_bgr)
+
+        # Send image to Roboflow API
+        with open(tfile.name, "rb") as image_file:
             response = requests.post(
                 f"https://detect.roboflow.com/{MODEL_ID}?api_key={API_KEY}&confidence=50",
                 files={"file": image_file},
@@ -62,18 +69,16 @@ if uploaded_file is not None:
                 else:
                     occupied_count += 1
 
-                cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-                cv2.putText(image, f"{class_name} {confidence:.2f}", (x, y - 10),
+                cv2.rectangle(image_bgr, (x, y), (x + w, y + h), color, 2)
+                cv2.putText(image_bgr, f"{class_name} {confidence:.2f}", (x, y - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-            # Convert image to RGB for display
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-           
+            # Convert BGR back to RGB for Streamlit display
+            image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
             st.image(image_rgb, caption="Detected Slots", use_container_width=True)
 
-
-            st.success(f"✅ Detection Complete!")
+            st.success("✅ Detection Complete!")
             st.markdown(f"**Vacant Slots:** {vacant_count}")
             st.markdown(f"**Occupied Slots:** {occupied_count}")
         else:
-            st.error(f"Error {response.status_code}: Could not analyze the image.")
+            st.error(f"❌ Error {response.status_code}: Could not analyze the image.")
